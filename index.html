@@ -14,7 +14,7 @@ crossorigin="anonymous">
       min-height: 50px;
     }
     .card-block {
-      padding: 50px;
+      padding: 30px 50px 50px;
     }
   </style>
 
@@ -29,15 +29,14 @@ crossorigin="anonymous">
           <div class="card">
             <div class="card-header">
               <span id="groupText"></span>
+              <br />
+              <span id="tweetLength">0</span>/280
+              <br />
+              <sup id="lengthWarning"></sup>                
             </div>
             <div class="card-block">
               <h4 class="card-title" id="timeleft"></h4>
               <p id="submissions"></p>
-              <p class="card-notification" id="tweetLength">
-                <span id="currLength"></span>/280
-                <br />
-                <sup id="lengthWarning"></sup>
-              </p>
               <sup>If "#end" is chosen, the tweet will complete and be posted</sup>
               <form action="">
                 <input id="m" autocomplete="off" />
@@ -73,7 +72,7 @@ crossorigin="anonymous">
           blacklist = []; 
           $('#groupText').text(groupText.data);
           $('#submissions').text('');
-          $('#tweetLength #currLength').text(groupText.data.length);
+          $('#tweetLength').text(groupText.data.length);
           $('#lengthWarning').text('');
         });
 
@@ -112,10 +111,8 @@ crossorigin="anonymous">
             }
           }
 
-          let currLength = $('#currLength').text();
-          let newWord = $('#m').val().length;
-
-          console.log(currLength + " " + newWord);
+          let currLength = parseInt($('#tweetLength').text());
+          let newWord = parseInt($('#m').val().length);
 
           if (currLength + newWord > 280 && $('#m').val() !== "#end") {
             $('#lengthWarning').text('If \"' + $('#m').val() + '\" is chosen, it will exceed maximum length and be truncated');
