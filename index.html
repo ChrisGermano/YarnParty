@@ -33,7 +33,11 @@ crossorigin="anonymous">
             <div class="card-block">
               <h4 class="card-title" id="timeleft"></h4>
               <p id="submissions"></p>
-              <p class="card-notification">Alerts + Errors</p>
+              <p class="card-notification" id="tweetLength">
+                <span id="currLength"></span>/280
+                <br />
+                <sup id="lengthWarning"></sup>
+              </p>
               <sup>If "#end" is chosen, the tweet will complete and be posted</sup>
               <form action="">
                 <input id="m" autocomplete="off" />
@@ -66,8 +70,11 @@ crossorigin="anonymous">
 
         socket.on('refresh', function(groupText) {
           timer = maxTime;
+          blacklist = []; 
           $('#groupText').text(groupText.data);
           $('#submissions').text('');
+          $('#tweetLength #currLength').text(groupText.data.length);
+          $('#lengthWarning').text('');
         });
 
         socket.on('message', function(msg) {
@@ -103,6 +110,15 @@ crossorigin="anonymous">
               $('#timeleft').text('You can only submit the same word once!')
               return false;
             }
+          }
+
+          let currLength = $('#currLength').text();
+          let newWord = $('#m').val().length;
+
+          console.log(currLength + " " + newWord);
+
+          if (currLength + newWord > 280 && $('#m').val() !== "#end") {
+            $('#lengthWarning').text('If \"' + $('#m').val() + '\" is chosen, it will exceed maximum length and be truncated');
           }
 
           socket.emit('message', $('#m').val());

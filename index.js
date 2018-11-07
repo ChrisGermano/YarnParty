@@ -52,6 +52,11 @@ function updateTimer() {
 
         var lastTweet = gameData.nextTweet;
 
+        if (lastTweet === "") {
+          io.emit('refresh', { 'data' : "Tweet cannot be empty" });
+           return;
+        }
+
         console.log("Posting to Twitter: \"" + lastTweet + "\"");
         gameData.pastTweets.push(lastTweet);
         gameData.nextTweet = '';
