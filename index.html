@@ -1,44 +1,49 @@
-<!doctype html>
-<html>
+<!doctype html> <html>
   <head>
     <title>YarnParty</title>
+    <link rel="stylesheet" 
+href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+crossorigin="anonymous">
 
-
-    <style>
-
-      body { height: 100vh; width: 100vw; overflow: hidden; margin: 0; padding: 20px; }
-      .header { text-align: center; font-size: 1.4em; max-width: 1300px; margin: 0 auto; }
-        .textWrapper { max-width: 1100px; margin: 0 auto; border: 1px solid black; padding: 40px; height: 150px; background-color: #EEE; }
-
-    </style>
+  <style>
+    .card {
+      display: block; margin: 150px auto; text-align: center;
+    }
+    .card-header {
+      min-height: 50px;
+    }
+    .card-block {
+      padding: 50px;
+    }
+  </style>
 
 
   </head>
   <body>
 
-    <div class="header">
-      <span id="usercount"></span>
-      <br />
-      <span>If "#end" is chosen, the tweet will complete and be posted</span>
-      <br />
-      <span id="timeleft">[...]</span>
-    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
 
-    <div class="textWrapper">
-      <span id="groupText"></span>
-    </div>
-
-    <div class="bankWrapper">
-      <span id="wordBank"></span>
-    </div>
-
-    <span id="submissions"></span>
-
-    <div class="inputWrapper">
-      <form action="">
-        <input id="m" autocomplete="off" /><button>Send</button>
-      </form>
-    </div>
+          <div class="card">
+            <div class="card-header">
+              <span id="groupText"></span>
+            </div>
+            <div class="card-block">
+              <h4 class="card-title" id="timeleft"></h4>
+              <p id="submissions"></p>
+              <p class="card-notification">Alerts + Errors</p>
+              <sup>If "#end" is chosen, the tweet will complete and be posted</sup>
+              <form action="">
+                <input id="m" autocomplete="off" />
+                <button>Send</button>
+              </form>
+              <sub id="usercount"></sub>
+            </div>
+          </div>
+        </div>
+      </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -48,6 +53,7 @@
 
         const maxTime = 10;
         var timer = maxTime;
+        var blacklist = [];
 
         setInterval(function() {
           var timeText = timer === 0 ? "!!! " + timer + " !!!" : "["+timer+"]";
@@ -62,7 +68,6 @@
           timer = maxTime;
           $('#groupText').text(groupText.data);
           $('#submissions').text('');
-          $('#wordBank').text('');
         });
 
         socket.on('message', function(msg) {
@@ -78,7 +83,6 @@
         });
 
         socket.on('usercount', function(usercount) {
-          console.log(usercount);
           let author = usercount.users > 1 ? "Authors" : "Author";
           $('#usercount').text(usercount.users + " " + author + " Connected");
           timer = usercount.servertime;
@@ -86,17 +90,12 @@
 
         $('form').submit(function() {
 
-          console.log($('#m').val());
+          if ($('#m').val() == '') {
+            return false;
+          }
 
-          if ($('#m').val() == '') return false;
-
-          let pastSubmits = $('#submissions').text().toLowerCase();
+          let pastSubmits = blacklist;
           let newSubmit = $('#m').val().toLowerCase().trim();
-
-          pastSubmits = pastSubmits.split(' ');
-
-          console.log(pastSubmits);
-          console.log(newSubmit);
 
           for (var sub in pastSubmits) {
             if (newSubmit == pastSubmits[sub]) {
@@ -112,11 +111,12 @@
           userSubs += ' ' + $('#m').val();
           $('#submissions').text(userSubs);
 
+          blacklist.push($('#m').val());
+
           $('#m').val('');
           return false;
         });
 
       });
     </script>
-  </body>
-</html>
+  </body> </html>

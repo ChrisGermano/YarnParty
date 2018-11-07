@@ -1,19 +1,20 @@
+"use strict";
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var uniqid = require('uniqid');
 
 const DEBUG = 1;
-
-const countDown = 10;
+const COUNTDOWN = 10;
 
 let connections = {};
 
 let gameData = {
   'users' : 0,
   'bank' : [],
-  'secsLeft' : countDown,
-  'resetTime' : countDown,
+  'secsLeft' : COUNTDOWN,
+  'resetTime' : COUNTDOWN,
   'nextTweet' : "",
   'pastTweets' : []
 }
