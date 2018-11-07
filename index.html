@@ -1,25 +1,25 @@
-<!doctype html> <html>
-  <head>
-    <title>YarnParty</title>
-    <link rel="stylesheet" 
-href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
-integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+<!doctype html>
+<html>
+<head>
+  <title>YarnParty</title>
+  <link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 crossorigin="anonymous">
 
-  <style>
-    .card {
-      display: block; margin: 150px auto; text-align: center;
-    }
-    .card-header {
-      min-height: 50px;
-    }
-    .card-block {
-      padding: 30px 50px 50px;
-    }
-  </style>
+<style>
+  .card {
+    display: block; margin: 150px auto; text-align: center;
+  }
+  .card-header {
+    min-height: 50px;
+  }
+  .card-block {
+    padding: 30px 50px 50px;
+  }
+</style>
 
-
-  </head>
+</head>
   <body>
 
     <div class="container">
@@ -28,21 +28,21 @@ crossorigin="anonymous">
 
           <div class="card">
             <div class="card-header">
-              <span id="groupText"></span>
+              <span class="tweetText"></span>
               <br />
-              <span id="tweetLength">0</span>/280
+              <span class="tweetLength">0</span>/280
               <br />
-              <sup id="lengthWarning"></sup>                
+              <sup class="lengthWarning"></sup>
             </div>
             <div class="card-block">
-              <h4 class="card-title" id="timeleft"></h4>
-              <p id="submissions"></p>
+              <h4 class="card-title timeLeft"></h4>
+              <p class="submissions"></p>
               <sup>If "#end" is chosen, the tweet will complete and be posted</sup>
               <form action="">
                 <input id="m" autocomplete="off" />
                 <button>Send</button>
               </form>
-              <sub id="usercount"></sub>
+              <sub class="userCount"></sub>
             </div>
           </div>
         </div>
@@ -58,9 +58,23 @@ crossorigin="anonymous">
         var timer = maxTime;
         var blacklist = [];
 
+        function uuid() {
+          if (window.localStorage.getItem('yarnparty') === null) {
+            var chunk = "";
+            function s4() {
+              return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+            }
+
+            window.localStorage.setItem()
+            return s4() + "_" + s4() + "_" + s4() + "_" + s4();
+          }
+
+          return window.localStorage.getItem('yarnparty');
+        }
+
         setInterval(function() {
           var timeText = timer === 0 ? "!!! " + timer + " !!!" : "["+timer+"]";
-          $('#timeleft').text(timeText);
+          $('.timeLeft').text(timeText);
           timer--;
           if (timer < 0) timer = 10;
         }, 1000);
@@ -69,62 +83,64 @@ crossorigin="anonymous">
 
         socket.on('refresh', function(groupText) {
           timer = maxTime;
-          blacklist = []; 
-          $('#groupText').text(groupText.data);
-          $('#submissions').text('');
-          $('#tweetLength').text(groupText.data.length);
-          $('#lengthWarning').text('');
+          blacklist = [];
+          $('.tweetText').text(groupText.data);
+          $('.submissions').text('');
+          $('.tweetLength').text(groupText.data.length);
+          $('.lengthWarning').text('');
         });
 
         socket.on('message', function(msg) {
 
-          var oldText = $('#groupText').text();
+          var oldText = $('.groupText').text();
 
           msg = JSON.parse(msg);
 
           var newBank = msg.bank.join(' ');
 
-          $('#groupText').text(msg.nextTweet);
-          $('#submissions').text(newBank);
+          $('.groupText').text(msg.nextTweet);
+          $('.submissions').text(newBank);
         });
 
-        socket.on('usercount', function(usercount) {
+        socket.on('userCount', function(usercount) {
           let author = usercount.users > 1 ? "Authors" : "Author";
-          $('#usercount').text(usercount.users + " " + author + " Connected");
+          $('.userCount').text(usercount.users + " " + author + " Connected");
           timer = usercount.servertime;
         })
 
         $('form').submit(function() {
 
-          if ($('#m').val() == '') {
+          let formValue = $('#m').val();
+
+          if (formValue == '') {
             return false;
           }
 
           let pastSubmits = blacklist;
-          let newSubmit = $('#m').val().toLowerCase().trim();
+          let newSubmit = formValue.toLowerCase().trim();
 
           for (var sub in pastSubmits) {
             if (newSubmit == pastSubmits[sub]) {
               $('#m').val('');
-              $('#timeleft').text('You can only submit the same word once!')
+              $('.timeLeft').text('You can only submit the same word once!')
               return false;
             }
           }
 
           let currLength = parseInt($('#tweetLength').text());
-          let newWord = parseInt($('#m').val().length);
+          let newWord = parseInt(formValue.length);
 
           if (currLength + newWord > 280 && $('#m').val() !== "#end") {
-            $('#lengthWarning').text('If \"' + $('#m').val() + '\" is chosen, it will exceed maximum length and be truncated');
+            $('.lengthWarning').text('If \"' + formValue + '\" is chosen, it will exceed maximum length and be truncated');
           }
 
-          socket.emit('message', $('#m').val());
+          socket.emit('message', { value: formValue, user: uuid() });
 
           var userSubs = $('#submissions').text();
-          userSubs += ' ' + $('#m').val();
+          userSubs += ' ' + formValue;
           $('#submissions').text(userSubs);
 
-          blacklist.push($('#m').val());
+          blacklist.push(formValue);
 
           $('#m').val('');
           return false;

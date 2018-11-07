@@ -55,7 +55,7 @@ function updateTimer() {
       var chosen = gameData.bank[Math.floor(Math.random() * gameData.bank.length)];
       gameData.bank = [];
 
-      if (chosen === "#end") {
+      if (chosen.value === "#end") {
 
         var lastTweet = gameData.nextTweet;
 
@@ -74,7 +74,7 @@ function updateTimer() {
 
       } else {
 
-        var nextWord = gameData.nextTweet === "" ? chosen : ' ' + chosen;
+        var nextWord = gameData.nextTweet === "" ? chosen.value : ' ' + chosen.value;
         gameData.nextTweet += nextWord;
 
       }
@@ -85,7 +85,7 @@ function updateTimer() {
       console.log(gameData);
     }
 
-    io.emit('refresh', { 'data' : gameData.nextTweet });
+    io.emit('refresh', { 'data' : gameData.nextTweet, 'user' : chosen.user });
 
     return;
 
@@ -103,12 +103,6 @@ io.on('connection', function(socket) {
 
   io.emit('usercount', { 'users' : gameData.users, 'servertime' : gameData.secsLeft });
 
-  socket.on('data', function(data) {
-    //TODO: Unique user IDs for attributing points
-    console.log(uniqid());
-    connections[uniqid()] = { client : socket.id };
-  });
-
   socket.on('disconnect', function() {
     gameData.users--;
     io.emit('usercount',{ 'users' : gameData.users, 'servertime' : gameData.secsLeft });
@@ -116,9 +110,10 @@ io.on('connection', function(socket) {
 
   socket.on('message', function(msg) {
 
-    var firstWord = msg.split(' ')[0];
+    var firstWord = msg.value.split(' ')[0];
+    var user = msg.user;
 
-    gameData.bank.push(firstWord);
+    gameData.bank.push({ value: firstWord, user: user });
 
     var wordUpdate = {
       'word' : firstWord,
