@@ -5,6 +5,13 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var uniqid = require('uniqid');
 
+// On user connection, generate uniqid, send to user
+// User stores in local storage and submits words with attached id
+// Chosen word is returned with id, if matches user, update score
+// Upon choosing a word, save point with ID
+
+// Every time a word is chosen, save ID + word + timestamp to table
+
 const DEBUG = 1;
 const COUNTDOWN = 10;
 
