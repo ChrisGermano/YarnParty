@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+  <head>
+    <title>YarnParty</title>
+
+
+    <style>
+
+      body { height: 100vh; width: 100vw; overflow: hidden; margin: 0; padding: 20px; }
+      .header { text-align: center; font-size: 1.4em; max-width: 1300px; margin: 0 auto; }
+        .textWrapper { max-width: 1100px; margin: 0 auto; border: 1px solid black; padding: 40px; height: 150px; background-color: #EEE; }
+
+    </style>
+
+
+  </head>
+  <body>
+
+    <div class="header">
+      <span id="usercount"></span>
+      <br />
+      <span>If "#end" is chosen, the tweet will complete and be posted</span>
+      <br />
+      <span id="timeleft">[...]</span>
+    </div>
+
+    <div class="textWrapper">
+      <span id="groupText"></span>
+    </div>
+
+    <div class="bankWrapper">
+      <span id="wordBank"></span>
+    </div>
+
+    <span id="submissions"></span>
+
+    <div class="inputWrapper">
+      <form action="">
+        <input id="m" autocomplete="off" /><button>Send</button>
+      </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <script>
+      $(function() {
+
+        const maxTime = 10;
+        var timer = maxTime;
+
+        setInterval(function() {
+          var timeText = timer === 0 ? "!!! " + timer + " !!!" : "["+timer+"]";
+          $('#timeleft').text(timeText);
+          timer--;
+          if (timer < 0) timer = 10;
+        }, 1000);
+
+        var socket = io();
+
+        socket.on('refresh', function(groupText) {
+          timer = maxTime;
+          $('#groupText').text(groupText.data);
+          $('#submissions').text('');
+          $('#wordBank').text('');
+        });
+
+        socket.on('message', function(msg) {
+
+          var oldText = $('#groupText').text();
+
+          msg = JSON.parse(msg);
+
+          var newBank = msg.bank.join(' ');
+
+          $('#groupText').text(msg.nextTweet);
+          $('#submissions').text(newBank);
+        });
+
+        socket.on('usercount', function(usercount) {
+          console.log(usercount);
+          let author = usercount.users > 1 ? "Authors" : "Author";
+          $('#usercount').text(usercount.users + " " + author + " Connected");
+          timer = usercount.servertime;
+        })
+
+        $('form').submit(function() {
+
+          console.log($('#m').val());
+
+          if ($('#m').val() == '') return false;
+
+          let pastSubmits = $('#submissions').text().toLowerCase();
+          let newSubmit = $('#m').val().toLowerCase().trim();
+
+          pastSubmits = pastSubmits.split(' ');
+
+          console.log(pastSubmits);
+          console.log(newSubmit);
+
+          for (var sub in pastSubmits) {
+            if (newSubmit == pastSubmits[sub]) {
+              $('#m').val('');
+              $('#timeleft').text('You can only submit the same word once!')
+              return false;
+            }
+          }
+
+          socket.emit('message', $('#m').val());
+
+          var userSubs = $('#submissions').text();
+          userSubs += ' ' + $('#m').val();
+          $('#submissions').text(userSubs);
+
+          $('#m').val('');
+          return false;
+        });
+
+      });
+    </script>
+  </body>
+</html>
