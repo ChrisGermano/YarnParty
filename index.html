@@ -32,6 +32,13 @@ crossorigin="anonymous">
 </head>
   <body>
 
+    <div class="scoreboard">
+      <h4 class="username"></h4>
+      <br />
+      <ul class="scores">
+      </ul>
+    </div>
+
     <div class="container">
       <div class="row">
         <div class="col-md-6 offset-md-3">
@@ -69,18 +76,27 @@ crossorigin="anonymous">
         var blacklist = [];
 
         function nameGen() {
-          var possibleC = "BCDFGHJKLMNPQRSTVWXZ";
-          var possibleV = "AEIOUY";
 
-          function randomC() {
-            return possibleC[Math.floor(Math.random() * possibleC.length)];
+          if (window.localStorage.getItem('yarnparty_user') === null) {
+
+            var possibleC = "BCDFGHJKLMNPQRSTVWXZ";
+            var possibleV = "AEIOUY";
+
+            function randomC() {
+              return possibleC[Math.floor(Math.random() * possibleC.length)];
+            }
+
+            function randomV() {
+              return possibleV[Math.floor(Math.random() * possibleV.length)];
+            }
+
+            let username = randomC() + randomV() + randomC() + randomC() + randomV();
+            window.localStorage.setItem('yarnparty_user',username);
+            return username;
           }
 
-          function randomV() {
-            return possibleV[Math.floor(Math.random() * possibleV.length)];
-          }
+          return window.localStorage.getItem('yarnparty_user');
 
-          console.log(randomC() + randomV() + randomC() + randomC() + randomV());
         }
 
         function uuid() {
