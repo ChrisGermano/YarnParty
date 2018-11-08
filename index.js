@@ -28,15 +28,6 @@ let gameData = {
 
 // =============================================================
 
-class Submission {
-  constructor (word, userID) {
-    this.word = word;
-    this.userID = userID;
-  }
-}
-
-// =============================================================
-
 app.get('/', function(req,res) {
   res.sendFile(__dirname + '/index.html');
 });
@@ -46,8 +37,7 @@ app.get('/', function(req,res) {
 function updateTimer() {
 
   if (gameData.secsLeft === 0) {
-    //gameData.pastTweets.push(gameData.nextTweet);
-    //gameData.nextTweet = "";
+
     gameData.secsLeft = gameData.resetTime;
 
     if (gameData.bank.length > 0) {
@@ -85,7 +75,7 @@ function updateTimer() {
       console.log(gameData);
     }
 
-    io.emit('refresh', { 'data' : gameData.nextTweet, 'user' : chosen.user });
+    io.emit('refresh', { 'data' : gameData.nextTweet });
 
     return;
 
