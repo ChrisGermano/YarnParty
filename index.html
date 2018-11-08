@@ -17,6 +17,16 @@ crossorigin="anonymous">
   .card-block {
     padding: 30px 50px 50px;
   }
+
+  .scoreboard {
+    box-shadow: 5px 5px 10px #DDD;
+    background: #FEFEFE;
+    height: 300px;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 150px;
+  }
 </style>
 
 </head>
@@ -57,6 +67,21 @@ crossorigin="anonymous">
         const maxTime = 10;
         var timer = maxTime;
         var blacklist = [];
+
+        function nameGen() {
+          var possibleC = "BCDFGHJKLMNPQRSTVWXZ";
+          var possibleV = "AEIOUY";
+
+          function randomC() {
+            return possibleC[Math.floor(Math.random() * possibleC.length)];
+          }
+
+          function randomV() {
+            return possibleV[Math.floor(Math.random() * possibleV.length)];
+          }
+
+          console.log(randomC() + randomV() + randomC() + randomC() + randomV());
+        }
 
         function uuid() {
           if (window.localStorage.getItem('yarnparty') === null) {
