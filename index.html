@@ -65,8 +65,10 @@ crossorigin="anonymous">
               return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
             }
 
-            window.localStorage.setItem()
-            return s4() + "_" + s4() + "_" + s4() + "_" + s4();
+            let tempID = s4() + "_" + s4() + "_" + s4() + "_" + s4();
+
+            window.localStorage.setItem('yarnparty',tempID)
+            return tempID;
           }
 
           return window.localStorage.getItem('yarnparty');
@@ -91,10 +93,6 @@ crossorigin="anonymous">
         });
 
         socket.on('message', function(msg) {
-
-          console.log("RECEIVED");
-          console.log(msg);
-          console.log("---");
 
           var oldText = $('.groupText').text();
 
@@ -139,10 +137,6 @@ crossorigin="anonymous">
           }
 
           socket.emit('message', { value: formValue, user: uuid() });
-
-          console.log("SENT");
-          console.log({ value: formValue, user: uuid() });
-          console.log("---");
 
           var userSubs = $('#submissions').text();
           userSubs += ' ' + formValue;
