@@ -98,7 +98,13 @@ crossorigin="anonymous">
 
           msg = JSON.parse(msg);
 
-          var newBank = msg.bank.join(' ');
+          var newBank = "";
+
+          for (var o in msg.bank) {
+            newBank += msg.bank[o].value + " ";
+          }
+
+          newBank = newBank.slice(0, -1);
 
           $('.groupText').text(msg.nextTweet);
           $('.submissions').text(newBank);
