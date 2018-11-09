@@ -194,7 +194,7 @@ crossorigin="anonymous">
             $('.lengthWarning').text('If \"' + formValue + '\" is chosen, it will exceed maximum length and be truncated');
           }
 
-          socket.emit('message', { value: formValue, user: uuid() });
+          socket.emit('message', { value: formValue, user: uuid(), name: nameGen() });
 
           var userSubs = $('#submissions').text();
           userSubs += ' ' + formValue;

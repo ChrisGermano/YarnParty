@@ -3,14 +3,8 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var uniqid = require('uniqid');
-
-// On user connection, generate uniqid, send to user
-// User stores in local storage and submits words with attached id
-// Chosen word is returned with id, if matches user, update score
-// Upon choosing a word, save point with ID
-
-// Every time a word is chosen, save ID + word + timestamp to table
+var Datastore = require('nedb'),
+  db = new Datastore({ filename: 'userdata.db', autoload: true });
 
 const DEBUG = 1;
 const COUNTDOWN = 10;
@@ -67,6 +61,23 @@ function updateTimer() {
         var nextWord = gameData.nextTweet === "" ? chosen.value : ' ' + chosen.value;
         gameData.nextTweet += nextWord;
 
+        let tmp = chosen.user;
+
+        db.find({ _id : chosen.user }, function(err, docs) {
+          if (err) {
+            console.log(err);
+          } else {
+            if (docs.length === 0) {
+              console.log("NO WINNER ASSOCIATED ERROR");
+            } else {
+              db.update({ _id : chosen.user }, { score : docs[0].score + 1 } function(err, docs) {
+                console.log("UPDATED?");
+                console.log(docs[0]);
+              })
+            }
+          }
+        })
+
       }
 
     }
@@ -102,6 +113,23 @@ io.on('connection', function(socket) {
 
     var firstWord = msg.value.split(' ')[0];
     var user = msg.user;
+
+    db.find({ _id: user }, function(err, docs) {
+      if (err) {
+        console.log(err);
+      } else if (docs.length === 0) {
+        var tmpUsr = {
+          _id : user,
+          name : msg.name,
+          score : 0
+        }
+        db.insert(tmpUsr, function(err2) {
+          if (err2) {
+            console.log(err2);
+          }
+        })
+      }
+    })
 
     gameData.bank.push({ value: firstWord, user: user });
 
