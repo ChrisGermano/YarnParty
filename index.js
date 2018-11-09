@@ -70,9 +70,9 @@ function updateTimer() {
             if (docs.length === 0) {
               console.log("NO WINNER ASSOCIATED ERROR");
             } else {
-              db.update({ _id : chosen.user }, { score : docs[0].score + 1 } function(err, docs) {
+              db.update({ _id : chosen.user }, { $set: { score : docs[0].score + 1 }, {}, function(err, docs) {
                 console.log("UPDATED?");
-                console.log(docs[0]);
+                console.log(docs);
               })
             }
           }
