@@ -145,8 +145,12 @@ crossorigin="anonymous">
 
           $('.scores').empty();
 
-          for (var s in groupText.scores) {
-            $('.scores').append('<li></li>').text(groupText.scores[s].name + " " + groupText.scores[s].score);
+          console.log(groupText.scores);
+
+          let scoreData = groupText.scores;
+
+          for (var s in scoreData) {
+            $('.scores').append("<li>" + scoreData[s].name + ": " + scoreData[s].score + "</li>");
           }
         });
 

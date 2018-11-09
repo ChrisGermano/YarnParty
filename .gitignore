@@ -1,3 +1,9 @@
+# Config
+config.js
+
+# Database
+userdata.db
+
 # Logs
 logs
 *.log

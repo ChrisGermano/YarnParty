@@ -1,10 +1,27 @@
 "use strict";
 
+const tConf = require('./config.js');
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Datastore = require('nedb'),
   db = new Datastore({ filename: 'userdata.db', autoload: true });
+
+var Twit = require('twit');
+const T = new Twit({
+  consumer_key: tConf.data.consumer_key,
+  consumer_secret: tConf.data.consumer_secret,
+  access_token: tConf.data.access_token,
+  access_token_secret: tConf.data.access_token_secret
+});
+
+/*
+T.post('statuses/update', {status: 'Yarn Party is started!'}, function(error, tweet, response) {
+  if (error) console.log(error);
+  console.log(tweet);
+});
+*/
 
 const DEBUG = 1;
 const COUNTDOWN = 10;
@@ -23,6 +40,7 @@ let gameData = {
 // TODO / IDEAS
 // Timestamp uuid, if not updated in a week(?), remove all instances in db
 // Admin endpoints to easily handle user/data management without SSHing
+// If the tweet is longer than one tweet's length, have it replied to itself as a chain
 
 // =============================================================
 
