@@ -20,6 +20,10 @@ let gameData = {
   'pastTweets' : []
 }
 
+// TODO / IDEAS
+// Timestamp uuid, if not updated in a week(?), remove all instances in db
+// Admin endpoints to easily handle user/data management without SSHing
+
 // =============================================================
 
 app.get('/', function(req,res) {
@@ -61,8 +65,6 @@ function updateTimer() {
         var nextWord = gameData.nextTweet === "" ? chosen.value : ' ' + chosen.value;
         gameData.nextTweet += nextWord;
 
-        let tmp = chosen.user;
-
         db.find({ _id : chosen.user }, function(err, docs) {
           if (err) {
             console.log(err);
@@ -71,8 +73,7 @@ function updateTimer() {
               console.log("NO WINNER ASSOCIATED ERROR");
             } else {
               db.update({ _id : chosen.user }, { $set: { score : docs[0].score + 1 }}, {}, function(err, docs) {
-                console.log("UPDATED?");
-                console.log(docs);
+
               })
             }
           }
@@ -86,7 +87,12 @@ function updateTimer() {
       console.log(gameData);
     }
 
-    io.emit('refresh', { 'data' : gameData.nextTweet });
+    db.find({}).sort({ score: 1 }).limit(3).exec(function (err, docs) {
+      for (var u in docs) {
+        console.log(docs[u].name + ": " + docs[u].score);
+      }
+      io.emit('refresh', { 'data' : gameData.nextTweet });
+    });
 
     return;
 
