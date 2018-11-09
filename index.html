@@ -142,6 +142,12 @@ crossorigin="anonymous">
           $('.submissions').text('');
           $('.tweetLength').text(groupText.data.length);
           $('.lengthWarning').text('');
+
+          $('.scores').empty();
+
+          for (var s in groupText.scores) {
+            $('.scores').append('<li></li>').text(groupText.scores[s].name + " " + groupText.scores[s].score);
+          }
         });
 
         socket.on('message', function(msg) {

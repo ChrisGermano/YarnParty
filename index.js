@@ -87,11 +87,20 @@ function updateTimer() {
       console.log(gameData);
     }
 
-    db.find({}).sort({ score: 1 }).limit(3).exec(function (err, docs) {
+    db.find({}).sort({ score: -1 }).limit(3).exec(function (err, docs) {
+
+      var scores = [];
+
       for (var u in docs) {
-        console.log(docs[u].name + ": " + docs[u].score);
+        scores.push[
+          {
+            name : docs[u].name,
+            score : docs[u].score
+          }
+        ]
       }
-      io.emit('refresh', { 'data' : gameData.nextTweet });
+
+      io.emit('refresh', { 'data' : gameData.nextTweet, 'scores' : docs });
     });
 
     return;
@@ -108,7 +117,7 @@ io.on('connection', function(socket) {
 
   gameData.users++;
 
-  io.emit('usercount', { 'users' : gameData.users, 'servertime' : gameData.secsLeft });
+  io.emit('userCount', { 'users' : gameData.users, 'servertime' : gameData.secsLeft });
 
   socket.on('disconnect', function() {
     gameData.users--;
