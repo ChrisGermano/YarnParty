@@ -136,11 +136,12 @@ io.on('connection', function(socket) {
 
   gameData.users++;
 
+  io.emit('refresh', { 'data' : gameData.nextTweet });
   io.emit('userCount', { 'users' : gameData.users, 'servertime' : gameData.secsLeft });
 
   socket.on('disconnect', function() {
     gameData.users--;
-    io.emit('usercount',{ 'users' : gameData.users, 'servertime' : gameData.secsLeft });
+    io.emit('userCount',{ 'users' : gameData.users, 'servertime' : gameData.secsLeft });
   });
 
   socket.on('message', function(msg) {

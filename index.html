@@ -148,6 +148,7 @@ crossorigin="anonymous">
         });
 
         socket.on('userCount', function(usercount) {
+
           let author = usercount.users > 1 ? "Authors" : "Author";
           $('.userCount').text(usercount.users + " " + author + " Connected");
           timer = usercount.servertime;
