@@ -2,7 +2,8 @@
 
 const tConf = require('./config.js');
 
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var Datastore = require('nedb'),
@@ -15,13 +16,6 @@ const T = new Twit({
   access_token: tConf.data.access_token,
   access_token_secret: tConf.data.access_token_secret
 });
-
-/*
-T.post('statuses/update', {status: 'Yarn Party is started!'}, function(error, tweet, response) {
-  if (error) console.log(error);
-  console.log(tweet);
-});
-*/
 
 const DEBUG = 1;
 const COUNTDOWN = 10;
@@ -43,6 +37,8 @@ let gameData = {
 // If the tweet is longer than one tweet's length, have it replied to itself as a chain
 
 // =============================================================
+
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req,res) {
   res.sendFile(__dirname + '/index.html');
@@ -73,6 +69,11 @@ function updateTimer() {
         console.log("Posting to Twitter: \"" + lastTweet + "\"");
         gameData.pastTweets.push(lastTweet);
         gameData.nextTweet = '';
+
+        T.post('statuses/update', {status: lastTweet}, function(error, tweet, response) {
+          if (error) console.log(error);
+          console.log(tweet);
+        });
 
         io.emit('refresh', { 'data' : "\"" + lastTweet + "\" was Tweeted!" });
 

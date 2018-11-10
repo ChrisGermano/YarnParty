@@ -2,75 +2,50 @@
 <html>
 <head>
   <title>YarnParty</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Spin together a Twitter story with friends!">
+
   <link rel="stylesheet"
 href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 crossorigin="anonymous">
-
-<style>
-  .card {
-    display: block; margin: 150px auto; text-align: center;
-  }
-  .card-header {
-    min-height: 50px;
-  }
-  .card-block {
-    padding: 30px 50px 50px;
-  }
-
-  .scoreboard {
-    box-shadow: 5px 5px 10px #DDD;
-    background: #FEFEFE;
-    height: 300px;
-    left: 0;
-    position: fixed;
-    top: 0;
-    width: 150px;
-  }
-
-  .username {
-    border-bottom: 1px solid #DDD;
-    margin-top: 15px;
-    padding-bottom: 20px;
-    text-align: center;
-  }
-</style>
-
+  <link href="https://fonts.googleapis.com/css?family=Chelsea+Market" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Life+Savers" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
 </head>
+
   <body>
+
+    <h1>YarnParty</h1>
+    <h2>Spin together a Twitter story with friends!</h2>
+
+    <div class="tweetWrapper">
+
+      <div class="timeLeft"></div>
+
+      <span class="tweetText"></span>
+      <br />
+      <span class="tweetLength">0</span>/280
+      <br />
+      <sup class="lengthWarning"></sup>
+    </div>
+
+    <div class="formWrapper">
+      <form action="">
+        <input id="m" autocomplete="off" />
+        <button>Send</button>
+      </form>
+      <span><b>If "#end" is chosen, the tweet will be posted!</b></span>
+      <br />
+      <span class="submissions"></span>
+    </div>
 
     <div class="scoreboard">
       <h4 class="username"></h4>
+      <span class="userCount"></span>
       <br />
-      <ul class="scores">
-      </ul>
+      <div class="scores"></div>
     </div>
-
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6 offset-md-3">
-
-          <div class="card">
-            <div class="card-header">
-              <span class="tweetText"></span>
-              <br />
-              <span class="tweetLength">0</span>/280
-              <br />
-              <sup class="lengthWarning"></sup>
-            </div>
-            <div class="card-block">
-              <h4 class="card-title timeLeft"></h4>
-              <p class="submissions"></p>
-              <sup>If "#end" is chosen, the tweet will complete and be posted</sup>
-              <form action="">
-                <input id="m" autocomplete="off" />
-                <button>Send</button>
-              </form>
-              <sub class="userCount"></sub>
-            </div>
-          </div>
-        </div>
-      </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -123,7 +98,7 @@ crossorigin="anonymous">
         }
 
         setInterval(function() {
-          var timeText = timer === 0 ? "!!! " + timer + " !!!" : "["+timer+"]";
+          var timeText = timer === 0 ? " " + timer + " " : " "+timer+" ";
           $('.timeLeft').text(timeText);
           timer--;
           if (timer < 0) timer = 10;
@@ -131,7 +106,7 @@ crossorigin="anonymous">
 
         //=====================================================
 
-        $('.username').text(nameGen());
+        $('.username').text("Hi, " + nameGen());
 
         var socket = io();
 
@@ -150,7 +125,7 @@ crossorigin="anonymous">
           let scoreData = groupText.scores;
 
           for (var s in scoreData) {
-            $('.scores').append("<li>" + scoreData[s].name + ": " + scoreData[s].score + "</li>");
+            $('.scores').append("<div class='trophy"+s+"'><img src='/img/trophy.svg'>" + scoreData[s].name + ": " + scoreData[s].score + "</div>");
           }
         });
 

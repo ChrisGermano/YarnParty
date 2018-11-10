@@ -1,0 +1,163 @@
+body {
+  background-color: #046380;   color #EFECCA;
+  font-family: 'Life Savers', cursive;
+  margin: 0;
+  text-align: center;
+}
+
+h1 {
+  color: #EFECCA;
+  font-family: 'Chelsea Market', cursive;
+  font-size: 5em;
+  margin-top: 100px;
+}
+
+h2 {
+  color: #EFECCA;
+  font-size: 1.4em;
+  margin-bottom: 40px;
+}
+
+.tweetText {
+  font-size: 2.4em;
+  min-width: 5px;
+}
+
+.timeLeft {
+  background-color: #EFECCA;
+  border-radius: 5px;
+  font-size: 1.8em;
+  left: 50%;
+  padding: 3px 10px;
+  position: absolute;
+  top: 0;
+  transform: translate(-50%, -50%);
+}
+
+.tweetWrapper, .formWrapper, .scoreboard {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 2em 1em 1em;
+}
+
+.tweetWrapper {
+  position: relative;
+}
+
+.formWrapper {
+  padding: 0;
+}
+
+form {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+input, button {
+  border: none;
+  box-shadow: none;
+  font-size: 1.6em;
+  line-height: 1.8em;
+  padding-left: 10px;
+  -webkit-appearance: none;
+}
+
+input {
+  flex: 3;
+  outline-width: 0;
+}
+
+button {
+  flex: 1;
+}
+
+.submissions {
+  color: #EFECCA;
+  font-size: 1.6em;
+  font-weight: bold;
+}
+
+.tweetWrapper {
+  background-color: rgba(255,255,255,0.4);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #222;
+  font-weight: 700;
+  text-align: center;
+}
+
+.formWrapper {
+  background-color: rgba(255,255,255,0.2);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  box-shadow: 0px 3px 0px #444;
+  padding-bottom: 10px;
+}
+
+.scoreboard {
+  background-color: rgba(255,255,255,0.2);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  font-weight: 700;
+  max-width: 700px;
+  padding: 10px;
+}
+
+.username {
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.userCount {
+  font-size: 1em;
+}
+
+.scores > div:nth-of-type(1) {
+  margin-top: 10px;
+}
+
+.scores > div:nth-of-type(2) {
+  margin: 5px 0;
+}
+
+.scores > div:nth-of-type(3) {
+}
+
+.trophy0 {
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.trophy1 {
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.trophy2 {
+  font-size: 10px;
+  line-height: 10px;
+}
+
+.trophy0 img {
+  fill: red;
+  height: 20px;
+  margin-top: -10px;
+  margin-right: 6px;
+  width: 20px;
+}
+
+.trophy1 img {
+  fill: green;
+  height: 14px;
+  margin-top: -8px;
+  margin-right: 5px;
+  width: 14px;
+}
+
+.trophy2 img {
+  fill: blue;
+  height: 10px;
+  margin-top: -5px;
+  margin-right: 3px;
+  width: 10px;
+}
