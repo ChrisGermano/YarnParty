@@ -1,5 +1,6 @@
 body {
-  background-color: #046380;   color #EFECCA;
+  background-color: #046380;
+  color #EFECCA;
   font-family: 'Life Savers', cursive;
   margin: 0;
   text-align: center;
@@ -157,4 +158,18 @@ button {
   content: '🎖';
   font-size: 14px;
   margin-right: 4px;
+}
+
+@media (max-width: 850px) {
+
+  h1 {
+    font-size: 4em;
+    margin-top: 40px;
+  }
+
+  .tweetWrapper, .formWrapper, .scoreboard {
+    border-radius: 0;
+    width: 100vw;
+  }
+
 }
