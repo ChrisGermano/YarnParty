@@ -1,22 +1,18 @@
 # YarnParty
+## Spin together a Twitter story with friends!
 
-Real-time word suggestions are randomly picked (influenced by suggestion popularity) on a steady interval to build social media posts, which are automatically shared.
+As soon as you join, a unique name and id are generated for you, streamlining the onboarding process. Then, all you need to do is type! Every ten seconds, a random word is chosen from recent submissions and appended to progressively generated Tweet.
 
-Users enter words, duplication and case ignored, that are stored in a temporary word bank. When the interval timer reaches 0, the words are sorted by popularity and the most popular word is appended to a generated string.
+While you can't submit the same word more than once per cycle, multiple people can submit the same word. The word bank is public, so keep an eye on other players' submissions that tickle your funny bone. At the end of each cycle, a random word is chosen from the word bank, so multiple instances of a word give it better odds of being selected.
 
-# Server-side
+The top three players are awarded with amazing little emojis and on display for the world to see.
 
-App status is monitored by an object that contains user count, word bank, interval time remaining, interval length, current post content, and, until a database is integrated, an array of previous social posts.
 
-## Elements
-### users
-The number of currently-connected users
+### Technical Details
 
-### bank
-An array of unique words nominated to be appended to the `nextTweet`
+YarnParty is powered by Node JS, Express, and Socket IO. This was my first foray into Socket IO development, so suggestions are welcome!
 
-### secsLeft / resetTime
-The number of seconds left until reset, and the total interval time in seconds
 
-### nextTweet / pastTweets
-A string constructed of words chosen from the wordBank, and an array of past constructed strings
+### License
+
+MIT

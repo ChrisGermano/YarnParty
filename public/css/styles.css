@@ -128,36 +128,33 @@ button {
   line-height: 20px;
 }
 
+.trophy0::before {
+  color: #C98910;
+  content: '🏆';
+  font-size: 22px;
+  margin-right: 8px;
+}
+
 .trophy1 {
   font-size: 14px;
   line-height: 14px;
 }
 
-.trophy2 {
-  font-size: 10px;
-  line-height: 10px;
-}
-
-.trophy0 img {
-  fill: red;
-  height: 20px;
-  margin-top: -10px;
+.trophy1::before {
+  color: #A8A8A8;
+  content: '🏅';
+  font-size: 16px;
   margin-right: 6px;
-  width: 20px;
 }
 
-.trophy1 img {
-  fill: green;
-  height: 14px;
-  margin-top: -8px;
-  margin-right: 5px;
-  width: 14px;
+.trophy2 {
+  font-size: 12px;
+  line-height: 12px;
 }
 
-.trophy2 img {
-  fill: blue;
-  height: 10px;
-  margin-top: -5px;
-  margin-right: 3px;
-  width: 10px;
+.trophy2::before {
+  color: #965A38;
+  content: '🎖';
+  font-size: 14px;
+  margin-right: 4px;
 }
