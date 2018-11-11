@@ -6,6 +6,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var sanitizeHtml = require('sanitize-html');
 var Datastore = require('nedb'),
   db = new Datastore({ filename: 'userdata.db', autoload: true });
 
@@ -17,7 +18,6 @@ const T = new Twit({
   access_token_secret: tConf.data.access_token_secret
 });
 
-const DEBUG = 1;
 const COUNTDOWN = 10;
 
 let connections = {};
@@ -62,17 +62,15 @@ function updateTimer() {
         var lastTweet = gameData.nextTweet;
 
         if (lastTweet === "") {
-          io.emit('refresh', { 'data' : "Tweet cannot be empty" });
+          io.emit('refresh', { 'data' : "Tweet cannot be empty :(" });
            return;
         }
 
-        console.log("Posting to Twitter: \"" + lastTweet + "\"");
         gameData.pastTweets.push(lastTweet);
         gameData.nextTweet = '';
 
         T.post('statuses/update', {status: lastTweet}, function(error, tweet, response) {
           if (error) console.log(error);
-          console.log(tweet);
         });
 
         io.emit('refresh', { 'data' : "\"" + lastTweet + "\" was Tweeted!" });
@@ -81,7 +79,7 @@ function updateTimer() {
 
       } else {
 
-        var nextWord = gameData.nextTweet === "" ? chosen.value : ' ' + chosen.value;
+        var nextWord = gameData.nextTweet === "" ? chosen.value.charAt(0).toUpperCase() + chosen.value.slice(1) : ' ' + chosen.value;
         gameData.nextTweet += nextWord;
 
         db.find({ _id : chosen.user }, function(err, docs) {
@@ -100,10 +98,6 @@ function updateTimer() {
 
       }
 
-    }
-
-    if (DEBUG) {
-      console.log(gameData);
     }
 
     db.find({}).sort({ score: -1 }).limit(3).exec(function (err, docs) {
@@ -147,6 +141,10 @@ io.on('connection', function(socket) {
   socket.on('message', function(msg) {
 
     var firstWord = msg.value.split(' ')[0];
+    firstWord = sanitizeHtml(firstWord).toLowerCase().trim();
+
+    if (firstWord == "") return;
+
     var user = msg.user;
 
     db.find({ _id: user }, function(err, docs) {
@@ -180,7 +178,7 @@ io.on('connection', function(socket) {
 });
 
 http.listen(3000, function() {
-  console.log('listening on *:3000');
+  console.log("Let's start the Yarn Party!");
 });
 
 
